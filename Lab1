@@ -1,0 +1,37 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+typedef struct {
+    double key;
+    std::string value;
+} TString;
+
+std::vector<TString> BucketSort(int size, std::vector<TString> all) {
+    std::vector<TString> sortim(size);
+    double onebucket = 201/k;
+}
+
+int main()
+{
+    TString get_1;
+    int i = 0;
+    std::vector<TString> all; 
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL);
+    while ( std::cin ) {
+        std::cin >> get_1.key 
+                 >> get_1.value;
+        all.push_back(get_1);
+    }
+
+    all = BucketSort(all.size(), all);
+
+    for ( int j = 0; j < all.size(); j++ ) {
+        std::cout << all[j].key 
+                  << " " 
+                  << all[j].value 
+                  << "\n";
+    }
+    return 0;
+}
