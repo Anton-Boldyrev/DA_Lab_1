@@ -26,7 +26,6 @@ int main()
     }
 
     all = BucketSort(all.size(), all);
-
     for ( int j = 0; j < all.size(); j++ ) {
         std::cout << all[j].key 
                   << " " 
