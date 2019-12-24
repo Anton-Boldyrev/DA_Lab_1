@@ -32,5 +32,6 @@ int main()
                   << all[j].value 
                   << "\n";
     }
+    
     return 0;
 }
