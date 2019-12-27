@@ -7,8 +7,6 @@ typedef struct {
     std::string value;
 } TString;
 
-
-
 std::vector<TString> BucketSort(int size, std::vector<TString> fin) {
     std::cout << "size : " 
               << size
