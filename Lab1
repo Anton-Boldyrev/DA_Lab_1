@@ -7,32 +7,55 @@ typedef struct {
     std::string value;
 } TString;
 
-std::vector<TString> BucketSort(int size, std::vector<TString> all) {
-    std::vector<TString> sortim(size);
-    double onebucket = 201/k;
-   
+
+
+std::vector<TString> BucketSort(int size, std::vector<TString> fin) {
+    std::cout << "size : " 
+              << size
+              << "\n\n";
+    std::vector<std::vector<TString>> sortim(size);
+    double onebucket = 201/size;
+    for ( int i = 0; i < size; i++ ) {
+        int j;
+        j = ( fin[i].key + 101) / onebucket;
+        sortim[j].push_back(fin[i]);
+    }
+    fin.clear();
+    for ( int i = 0; i < size; i++ ) {
+        for ( int j = 0; j < sortim[i].size(); j++ ) {
+            if (sortim[i].size() > 1) {
+                
+            }
+            fin.push_back(sortim[i][j]);
+        }
+    }
+    return fin;
 }
 
 int main()
 {
     TString get_1;
     int i = 0;
+    int k = 0;
     std::vector<TString> all; 
+
     std::ios_base::sync_with_stdio(false);
-    std::cin.tie(NULL);
-    while ( std::cin ) {
+//    std::cin.tie(NULL);
+    do {
         std::cin >> get_1.key 
                  >> get_1.value;
         all.push_back(get_1);
-    }
-
+        k += 1;
+    } while(k < 5);
+    std::cout << "\nBucketSort:\n";
     all = BucketSort(all.size(), all);
+
     for ( int j = 0; j < all.size(); j++ ) {
         std::cout << all[j].key 
                   << " " 
                   << all[j].value 
                   << "\n";
     }
-    
+
     return 0;
 }
