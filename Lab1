@@ -21,7 +21,7 @@ std::vector<TString> BucketSort(int size, std::vector<TString> fin) {
     fin.clear();
     for ( int i = 0; i < size; i++ ) {
         for ( int j = 0; j < sortim[i].size(); j++ ) {
-            if (sortim[i].size() > 1) {
+            if (sortim[i].size() > 1) {           //сортировка если в бакете больше одного элемента
                 
             }
             fin.push_back(sortim[i][j]);
@@ -45,7 +45,9 @@ int main()
         all.push_back(get_1);
         k += 1;
     } while(k < 5);
+    
     std::cout << "\nBucketSort:\n";
+    
     all = BucketSort(all.size(), all);
 
     for ( int j = 0; j < all.size(); j++ ) {
