@@ -7,7 +7,7 @@ typedef struct {
     std::string value;
 } TString;
 
-std::vector<TString> BucketSort(int size, std::vector<TString> fin) {
+std::vector<TString> BucketSort ( int size, std::vector<TString> fin ) {
     std::cout << "size : " 
               << size
               << "\n\n";
@@ -48,7 +48,7 @@ int main()
     
     std::cout << "\nBucketSort:\n";
     
-    all = BucketSort(all.size(), all);
+    all = BucketSort( all.size(), all );
 
     for ( int j = 0; j < all.size(); j++ ) {
         std::cout << all[j].key 
