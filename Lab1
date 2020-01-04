@@ -15,7 +15,7 @@ std::vector<TString> BucketSort(int size, std::vector<TString> fin) {
     double onebucket = 201/size;
     for ( int i = 0; i < size; i++ ) {
         int j;
-        j = ( fin[i].key + 101) / onebucket;
+        j = ( fin[i].key + 101 ) / onebucket;
         sortim[j].push_back(fin[i]);
     }
     fin.clear();
