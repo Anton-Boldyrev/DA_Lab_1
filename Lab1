@@ -1,59 +1,170 @@
 #include <iostream>
-#include <string>
-#include <vector>
-
+#include <ctime>
+#include <cstdio>
+#include <iomanip>
+#include <cstdint>
+#include <limits>
+/*
 typedef struct {
-    double key;
-    std::string value;
-} TString;
-
-std::vector<TString> BucketSort ( int size, std::vector<TString> fin ) {
-    std::cout << "size : " 
-              << size
-              << "\n\n";
-    std::vector<std::vector<TString>> sortim(size);
-    double onebucket = 201/size;
-    for ( int i = 0; i < size; i++ ) {
-        int j;
-        j = ( fin[i].key + 101 ) / onebucket;
-        sortim[j].push_back(fin[i]);
+    long sLen = 0;
+    char ch, * str = (char *)malloc(sizeof(char));
+    std::cout << "String:\n";
+    while (( ch = getchar()) != '\n' ) {
+        str[sLen] = ch;
+        str = (char *)realloc(str,(1 + (sLen++))char);
     }
-    fin.clear();
-    for ( int i = 0; i < size; i++ ) {
-        for ( int j = 0; j < sortim[i].size(); j++ ) {
-            if (sortim[i].size() > 1) {           //сортировка в бакете если в нем больше одного элемента
-                
+    str[sLen] = '\0';
+    std::cout << "\n\n" << str;
+} bigString;
+*/
+struct TData{
+    double key;
+    char value[2049] = {'\0'};
+};
+
+
+template<class T>
+class TVector {
+private:
+    size_t size_;
+    size_t cap_;
+    T *data_;
+public:
+    TVector() :
+            size_(0), cap_(0), data_(nullptr) {};
+
+    TVector(double n) :
+            size_(n), cap_(n), data_(new T[cap_]) {};
+
+    TVector(double n, T x){
+        size_ = n;
+        cap_ = n;
+        data_ = new T[cap_];
+        for (size_t i = 0; i < size_; i++)
+            data_[i] = x;
+    }
+
+    TVector(const TVector<T>& other){
+        if (data_)
+            delete[] data_;
+        data_ = new T[other.cap_];
+        for (size_t i = 0; i < other.size_; ++i) {
+            data_[i] = other.data_[i];
+        }
+        size_ = other.Size();
+        cap_ = other.cap_;
+    }
+
+    ~TVector(){
+        delete[] data_;
+    }
+
+    T& operator[] (const int id) const{
+        return data_[id];
+    }
+
+    TVector<T>& operator= (const TVector<T>& other) {
+        if (this != &other) {
+            T* tmp = new T[other.size_];
+            for (size_t i = 0; i < other.size_; ++i) {
+                tmp[i] = other.data_[i];
             }
-            fin.push_back(sortim[i][j]);
+            delete[] data_;
+            data_ = tmp;
+            size_ = other.size_;
+            cap_ = other.cap_;
+        }
+        return *this;
+    }
+
+    void PushBack(const T& newdata_) {
+        if (cap_ == size_){
+            cap_ *= 2;
+            if (cap_ == 0)
+                cap_ = 1;
+            T *tmp = new T[cap_];
+            for (size_t i = 0; i < size_; ++i) {
+                tmp[i] = data_[i];
+            }
+            delete[] data_;
+            data_ = tmp;
+        }
+        data_[size_++] = newdata_;
+    }
+
+    size_t Size() const {
+        return size_;
+    }
+};
+
+void InsSort(TVector<TData>& vect, double n) {
+    for (int i = 1; i < n; i++) {
+        TData now = vect[i];
+        int j = i - 1;
+        while(j >= 0 && vect[j].key > now.key) {
+            vect[j + 1] = vect[j];
+            --j;
+        }
+        vect[j + 1] = now;
+    }
+}
+
+TVector<TData> BucketSort(int n, TVector<TData> const& vect) {
+    TVector<TVector<TData> > buckets(n);
+
+    double min_el = std::numeric_limits<double>::max();
+    double max_el = std::numeric_limits<double>::min();
+
+    for (int i = 0; i < n; i++) {
+        TData elem = vect[i];
+        min_el = std::min(min_el, elem.key);
+        max_el = std::max(max_el, elem.key);
+    }
+
+    double len = (max_el - min_el + 1e-9);
+
+    for (int i = 0; i < n; i++) {
+        size_t num = ((vect[i].key - min_el) / len) * n;
+
+        if (num >= (size_t) n)
+            num = n - 1;
+
+        buckets[num].PushBack(vect[i]);
+
+    }
+
+    for (int i = 0; i < n; i++) {
+        InsSort(buckets[i], buckets[i].Size());
+    }
+
+    TVector<TData> res(n);
+    int ind = 0;
+    for (int i = 0; i < n; i++) {
+        for (size_t j = 0; j < buckets[i].Size(); j++) {
+            res[ind++] = buckets[i][j];
         }
     }
-    return fin;
+    return res;
 }
 
 int main()
 {
-    TString get_1;
-    int i = 0;
-    int k = 0;
-    std::vector<TString> all; 
+    std::ios::sync_with_stdio(false);
+    TData get_1;
+    TVector<TData> all;
+    std::cin.tie(NULL);
+    while ( std::cin >> get_1.key >> get_1.value) {
+        all.PushBack(get_1);
+    }
+//    std::cout << "\nBucketSort:\n";
+    all = BucketSort(all.Size(), all);
 
-    std::ios_base::sync_with_stdio(false);
-//    std::cin.tie(NULL);
-    do {
-        std::cin >> get_1.key 
-                 >> get_1.value;
-        all.push_back(get_1);
-        k += 1;
-    } while(k < 5);
-    
-    std::cout << "\nBucketSort:\n";
-    
-    all = BucketSort( all.size(), all );
-
-    for ( int j = 0; j < all.size(); j++ ) {
-        std::cout << all[j].key 
+    for ( int j = 0; j < all.Size(); j++ ) {
+        std::cout << std::fixed
+                  << std::setprecision(6)
+                  << all[j].key
                   << " " 
-                  << all[j].value 
+                  << all[j].value
                   << "\n";
     }
 
