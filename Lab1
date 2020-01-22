@@ -1,27 +1,13 @@
 #include <iostream>
-#include <ctime>
 #include <cstdio>
-#include <iomanip>
-#include <cstdint>
 #include <limits>
-/*
-typedef struct {
-    long sLen = 0;
-    char ch, * str = (char *)malloc(sizeof(char));
-    std::cout << "String:\n";
-    while (( ch = getchar()) != '\n' ) {
-        str[sLen] = ch;
-        str = (char *)realloc(str,(1 + (sLen++))char);
-    }
-    str[sLen] = '\0';
-    std::cout << "\n\n" << str;
-} bigString;
-*/
+#include <cstdint>
+#include <iomanip>
+
 struct TData{
     double key;
-    char value[2049] = {'\0'};
+    char val[2049] = {'\0'};
 };
-
 
 template<class T>
 class TVector {
@@ -97,6 +83,7 @@ public:
     }
 };
 
+
 void InsSort(TVector<TData>& vect, double n) {
     for (int i = 1; i < n; i++) {
         TData now = vect[i];
@@ -109,7 +96,7 @@ void InsSort(TVector<TData>& vect, double n) {
     }
 }
 
-TVector<TData> BucketSort(int n, TVector<TData> const& vect) {
+TVector<TData> BucketSort(TVector<TData> const& vect, double n) {
     TVector<TVector<TData> > buckets(n);
 
     double min_el = std::numeric_limits<double>::max();
@@ -147,26 +134,23 @@ TVector<TData> BucketSort(int n, TVector<TData> const& vect) {
     return res;
 }
 
-int main()
-{
-    std::ios::sync_with_stdio(false);
-    TData get_1;
-    TVector<TData> all;
-    std::cin.tie(NULL);
-    while ( std::cin >> get_1.key >> get_1.value) {
-        all.PushBack(get_1);
-    }
-//    std::cout << "\nBucketSort:\n";
-    all = BucketSort(all.Size(), all);
 
-    for ( int j = 0; j < all.Size(); j++ ) {
-        std::cout << std::fixed
-                  << std::setprecision(6)
-                  << all[j].key
-                  << " " 
-                  << all[j].value
-                  << "\n";
-    }
+    int main() {
+        std::ios::sync_with_stdio(false);
+        TVector<TData> vect;
+        TData in;
 
-    return 0;
-}
+
+
+        while(std::cin >> in.key >> in.val) {
+            vect.PushBack(in);
+        }
+
+        TVector<TData> res;
+        res = BucketSort(vect, vect.Size());
+
+        for (size_t i = 0; i < res.Size(); i++) {
+            std::cout << std::fixed << std::setprecision(6) << res[i].key << '\t' << res[i].val << "\n";
+        }
+        return 0;
+    }
