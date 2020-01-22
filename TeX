@@ -1,0 +1,414 @@
+\documentclass[pdf, unicode, 12pt, a4paper,oneside,fleqn]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T2B]{fontenc}
+\usepackage[english,russian]{babel}
+
+\frenchspacing
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{longtable}
+\usepackage[table]{xcolor}
+\usepackage{array}
+\usepackage{color}
+\usepackage{xcolor}
+
+\usepackage{hyperref}
+
+
+\newcommand{\MYhref}[3][blue]{\href{#2}{\color{#1}{#3}}}%
+
+\usepackage{listings}
+\usepackage{alltt}
+\usepackage{csquotes}
+\DeclareQuoteStyle{russian}
+	{\guillemotleft}{\guillemotright}[0.025em]
+	{\quotedblbase}{\textquotedblleft}
+\ExecuteQuoteOptions{style=russian}
+
+\usepackage{graphicx}
+
+\usepackage{listings}
+\lstset{tabsize=2,
+	breaklines,
+	columns=fullflexible,
+	flexiblecolumns,
+	numbers=left,
+	numberstyle={\footnotesize},
+	extendedchars,
+	inputencoding=utf8}
+
+\usepackage{longtable}
+
+\def\@xobeysp{ }
+\def\verbatim@processline{\hspace{1.2cm}\raggedright\the\verbatim@line\par}
+
+\oddsidemargin=-0.4mm
+\textwidth=160mm
+\topmargin=4.6mm
+\textheight=210mm
+
+\parindent=0pt
+\parskip=3pt
+
+\definecolor{lightgray}{gray}{0.9}
+
+
+\renewcommand{\thesubsection}{\arabic{subsection}}
+
+\lstdefinestyle{customc}{
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+  frame=L,
+  xleftmargin=\parindent,
+  language=C,
+  showstringspaces=false,
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{gray},
+  identifierstyle=\color{black},
+  stringstyle=\color{blue},
+}
+
+\lstdefinestyle{customasm}{
+  belowcaptionskip=1\baselineskip,
+  frame=L,
+  xleftmargin=\parindent,
+  language=[x86masm]Assembler,
+  basicstyle=\footnotesize\ttfamily,
+  commentstyle=\itshape\color{purple!40!black},
+}
+
+\lstset{escapechar=@,style=customc}
+
+
+\newcommand{\CWPHeader}[1]{\addtocounter{section}{-1}\section{#1}}
+
+% Заголовок лабораторной работы.
+% Единственный аргумент --- ее тема
+\newcommand{\CWHeader}[1]{\section*{#1}}
+
+\newcommand{\CWProblem}[1]{\par\textbf{Задача: }#1}
+
+\begin{document}
+\begin{titlepage}
+\begin{center}
+\bfseries
+
+{\Large Московский авиационный институт\\ (национальный исследовательский университет)
+
+}
+
+\vspace{48pt}
+
+{\large Факультет информационных технологий и прикладной математики
+}
+
+\vspace{36pt}
+
+{\large Кафедра вычислительной математики и~программирования
+
+}
+
+
+\vspace{48pt}
+
+Лабораторная работа \textnumero 1 по курсу \enquote{Дискретный анализ}
+
+\end{center}
+
+\vspace{72pt}
+
+\begin{flushright}
+\begin{tabular}{rl}
+Студент: & А.\,К. Болдырев \\
+Преподаватель: & А.\,А. Кухтичев \\
+Группа: & М8О - 206Б \\
+Дата: & \\
+Оценка: & \\
+Подпись: & \\
+\end{tabular}
+\end{flushright}
+
+\vfill
+
+\begin{center}
+\bfseries
+Москва, \the\year
+\end{center}
+\end{titlepage}
+
+\pagebreak
+
+\CWHeader{Лабораторная работа \textnumero 1}
+
+\CWProblem{
+Требуется разработать программу, осуществляющую ввод пар \enquote{ключ-значение}, их 
+упорядочивание по возрастанию ключа указанным алгоритмом сортировки за линейное время и вывод отсортированной последовательности.
+
+{\bfseries Вариант сортировки:} Карманная сортировка.
+
+{\bfseries Вариант ключа:} { \normalfont\ttfamily Вещественные числа в промежутке [—100, 100]. }
+
+{\bfseries Вариант значения:} { \normalfont\ttfamily Строки переменной длины (до 2048 символов).}
+}
+
+\pagebreak
+
+\section{Описание}
+
+Как сказано в книге \enquote{Т. Кормен, Алгоритмы. Построение и анализ}:
+\enquote{Идея алгоритма состоит в том, что промежуток [0; 1) делится на n равных частей, после чего для чисел из каждой части выделяется свой ящик-черпак (bucket), и n подлежащих сортировке чисел раскладываются по этим ящикам. Поскольку числа равномерно распределены на отрезке [0; 1), следует ожидать, что в каждом ящике их будет немного. Теперь отсортируем числа в каждом ящике по отдельности и пройдемся по ящикам в порядке возрастания, выписывая попавшие в каждый из них числа также в порядке возрастания.}
+\\Будем считать, что на вход подается $n$-элементный массив $A$, причем 0 <= $A[i]$ < 1 для всех $i$. Используется также вспомогательный массив $B[0..n-1]$, состоящий из списков, соответствующих ящикам.
+\\Математическое ожидание времени работы карманной сортировки линейно зависит от количества чисел.
+
+
+
+
+
+\pagebreak
+
+\section{Исходный код}
+
+На каждой непустой строке входного файла располагается пара \enquote{ключ-значение}, поэтому создадим новую 
+структуру TDats, в которой будем хранить ключ(key) в переменной типа double и значение(val) в переменной типа val[2049]. Реализуем основные функции для вектора TVector.
+\newline Функция TVector<TData> BucketSort (TVector<TData> const\& vect,  double n) выполняет соритровку. На вход ей подается вектор, который нужно отсортироваеть и его размер. В самой функции заводится вектор векторов, в конце происходит вывод отсортированного вектора. Принцип сортировки описан в предыдущем пункте.
+\newline В функции main происходит ввод пар ключей-значений и запись их в вектор. После вызова функции сортировки происходит вывод отсортированного вектора.
+
+\begin{longtable}{|p{7.5cm}|p{7.5cm}|}
+\hline
+\rowcolor{lightgray}
+\multicolumn{2}{|c|} {main.cpp}\\
+\hline
+TVector<TData> BucketSort(TVector<TData> const vect,  double n) &Функция карманной сортировки.\\
+\hline
+\rowcolor{lightgray}
+
+
+int main()&В функции main происходит ввод пар ключей-значений и запись их в вектор.\\
+\hline
+\end{longtable}
+
+\begin{lstlisting}[language=C++]
+#include <iostream>
+#include <cstdio>
+#include <limits>
+#include <cstdint>
+#include <iomanip>
+
+struct TData{
+    double key;
+    char val[2049] = {'\0'};
+};
+
+template<class T>
+class TVector {
+private:
+    size_t size_;
+    size_t cap_;
+    T *data_;
+public:
+    TVector() :
+            size_(0), cap_(0), data_(nullptr) {};
+
+    TVector(double n) :
+            size_(n), cap_(n), data_(new T[cap_]) {};
+
+    TVector(double n, T x){
+        size_ = n;
+        cap_ = n;
+        data_ = new T[cap_];
+        for (size_t i = 0; i < size_; i++)
+            data_[i] = x;
+    }
+
+    TVector(const TVector<T>& other){
+        if (data_)
+            delete[] data_;
+        data_ = new T[other.cap_];
+        for (size_t i = 0; i < other.size_; ++i) {
+            data_[i] = other.data_[i];
+        }
+        size_ = other.Size();
+        cap_ = other.cap_;
+    }
+
+    ~TVector(){
+        delete[] data_;
+    }
+
+    T& operator[] (const int id) const{
+        return data_[id];
+    }
+
+    TVector<T>& operator= (const TVector<T>& other) {
+        if (this != &other) {
+            T* tmp = new T[other.size_];
+            for (size_t i = 0; i < other.size_; ++i) {
+                tmp[i] = other.data_[i];
+            }
+            delete[] data_;
+            data_ = tmp;
+            size_ = other.size_;
+            cap_ = other.cap_;
+        }
+        return *this;
+    }
+
+    void PushBack(const T& newdata_) {
+        if (cap_ == size_){
+            cap_ *= 2;
+            if (cap_ == 0)
+                cap_ = 1;
+            T *tmp = new T[cap_];
+            for (size_t i = 0; i < size_; ++i) {
+                tmp[i] = data_[i];
+            }
+            delete[] data_;
+            data_ = tmp;
+        }
+        data_[size_++] = newdata_;
+    }
+
+    size_t Size() const {
+        return size_;
+    }
+};
+
+
+void InsSort(TVector<TData>& vect, double n) {
+    for (int i = 1; i < n; i++) {
+        TData now = vect[i];
+        int j = i - 1;
+        while(j >= 0 && vect[j].key > now.key) {
+            vect[j + 1] = vect[j];
+            --j;
+        }
+        vect[j + 1] = now;
+    }
+}
+
+TVector<TData> BucketSort(TVector<TData> const& vect, double n) {
+    TVector<TVector<TData> > buckets(n);
+
+    double min_el = std::numeric_limits<double>::max();
+    double max_el = std::numeric_limits<double>::min();
+
+    for (int i = 0; i < n; i++) {
+        TData elem = vect[i];
+        min_el = std::min(min_el, elem.key);
+        max_el = std::max(max_el, elem.key);
+    }
+
+    double len = (max_el - min_el + 1e-9);
+
+    for (int i = 0; i < n; i++) {
+        size_t num = ((vect[i].key - min_el) / len) * n;
+
+        if (num >= (size_t) n)
+            num = n - 1;
+
+        buckets[num].PushBack(vect[i]);
+
+    }
+
+    for (int i = 0; i < n; i++) {
+        InsSort(buckets[i], buckets[i].Size());
+    }
+
+    TVector<TData> res(n);
+    int ind = 0;
+    for (int i = 0; i < n; i++) {
+        for (size_t j = 0; j < buckets[i].Size(); j++) {
+            res[ind++] = buckets[i][j];
+        }
+    }
+    return res;
+}
+
+
+    int main() {
+        std::ios::sync_with_stdio(false);
+        TVector<TData> vect;
+        TData in;
+
+
+
+        while(std::cin >> in.key >> in.val) {
+            vect.PushBack(in);
+        }
+
+        TVector<TData> res;
+        res = BucketSort(vect, vect.Size());
+
+        for (size_t i = 0; i < res.Size(); i++) {
+            std::cout << std::fixed << std::setprecision(6) << res[i].key << '\t' << res[i].val << "\n";
+        }
+        return 0;
+    }
+
+\end{lstlisting}
+\pagebreak
+\section{Консоль}
+\begin{alltt}
+anton@anton-Lenovo-ideapad-320-15IKB:~/DA/Lab_1_BucSo\$ ./a.out
+-100 adsdsfa
+-99 asffa
+76 afdsdfa
+-99 afdsfagfgfgs
+78 dgasgsdag
+12 easdfgfads
+1 adsfgfasdf
+-2 adsggasdg
+99 dsagfdsagdsf
+100 dasgdsfgasd
+
+
+-100.000000 adsdsfa
+-99.000000 asffa
+-99.000000 afdsfagfgfgs
+-2.000000 adsggasdg
+1.000000 adsfgfasdf
+12.000000 easdfgfads
+76.000000 afdsdfa
+78.000000 dgasgsdag
+99.000000 dsagfdsagdsf
+100.000000 dasgdsfgasd
+anton@anton-Lenovo-ideapad-320-15IKB:~/DA/Lab_1_BucSo\$
+\end{alltt}
+\pagebreak
+\section{Тест производительности}
+Тест производительности представляет из себя следующее: сортировка ключей и значений происходит при помощи 3 сортировок, первая - BubbleSort, вторая - QuickSort, третья BucketSort.
+Для начала запустим сортировку для файла, состоящего из 100 строк.
+\begin{alltt}
+anton@anton-Lenovo-ideapad-320-15IKB:~/DA/Lab_1_BucSo\$ ./a.out < 01_100.t 
+BubbleSort time: 0.000374 sec
+anton@anton-Lenovo-ideapad-320-15IKB:~/DA/Lab_1_BucSo\$ g++ std.cpp 
+anton@anton-Lenovo-ideapad-320-15IKB:~/DA/Lab_1_BucSo\$ ./a.out < 01_100.t 
+QuickSort time: 9.1e-05 sec
+anton@anton-Lenovo-ideapad-320-15IKB:~/DA/Lab_1_BucSo\$ g++ lab1.cpp 
+anton@anton-Lenovo-ideapad-320-15IKB:~/DA/Lab_1_BucSo\$ ./a.out < 01_100.t 
+BucketSort time: 0.020776 sec
+\end{alltt}
+
+\pagebreak
+\section{Выводы}
+
+Выполнив первую лабораторную работу по курсу \enquote{Дискретный анализ}, я реализвоал карманную сортировку (BucketSort) на языке C++, которая работает за линейное время ~(O($N$)). Также провел сравнение со стандартной сортировкой в C++ и соритровкой пузырьком, и сделал вывод, что карманная сортировка лучше всего подходит для вещественных чисел. Применить сортировку можно, например в базе данных, для того, чтобы осортировать поля по ключам, которые повторяются и при этом максимальное значение ключа является вещественным числом. Как например в моем варианте лабораторной работы, где ключами являлись вещественные числа в промежутке [-100, 100].
+\pagebreak
+
+\begin{thebibliography}{99}
+\bibitem{Kormen}
+Томас\,Х.\,Кормен, Чарльз\,И.\,Лейзерсон, Рональд\,Л.\,Ривест, Клиффорд\,Штайн.
+{\itshape Алгоритмы: построение и анализ, 2-е издание.} --- Издательский дом \enquote{Вильямс}, 2007. Перевод с английского: И.\,В.\,Красиков, Н.\,А.\,Орехова, В.\,Н.\,Романов. --- 1296 с. (ISBN 5-8459-0857-4 (рус.))
+\bibitem{wikipedia_sort}
+{\itshape Блочная сортировка — Википедия.} \\URL: \texttt{http://ru.wikipedia.org/wiki/Блочная\_сортировка} .
+
+\bibitem{lections}
+Макаров Н.К. Лекции по курсу \enquote{Дискретный анализ}
+
+\end{thebibliography}
+\pagebreak
+
+\end{document}
