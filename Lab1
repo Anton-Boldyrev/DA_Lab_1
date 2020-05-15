@@ -49,7 +49,7 @@ public:
         return data_[id];
     }
 
-    TVector<T>& operator= (const TVector<T>& other) {
+    TVector<T>& operator= (const TVector<T> & other) {
         if (this != &other) {
             T* tmp = new T[other.size_];
             for (size_t i = 0; i < other.size_; ++i) {
@@ -85,7 +85,7 @@ public:
 
 
 void InsSort(TVector<TData>& vect, double n) {
-    for (int i = 1; i < n; i++) {
+    for ( int i = 1; i < n; i++ ) {
         TData now = vect[i];
         int j = i - 1;
         while(j >= 0 && vect[j].key > now.key) {
@@ -102,7 +102,7 @@ TVector<TData> BucketSort(TVector<TData> const& vect, double n) {
     double min_el = std::numeric_limits<double>::max();
     double max_el = std::numeric_limits<double>::min();
 
-    for (int i = 0; i < n; i++) {
+    for ( int i = 0; i < n; i++ ) {
         TData elem = vect[i];
         min_el = std::min(min_el, elem.key);
         max_el = std::max(max_el, elem.key);
@@ -120,7 +120,7 @@ TVector<TData> BucketSort(TVector<TData> const& vect, double n) {
 
     }
 
-    for (int i = 0; i < n; i++) {
+    for ( int i = 0; i < n; i++ ) {
         InsSort(buckets[i], buckets[i].Size());
     }
 
